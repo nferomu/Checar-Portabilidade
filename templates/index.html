@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Portabilidade INSS - ConsigaCred</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 Consulta de Portabilidade INSS</h1>
+            <p>Sistema de consulta para empréstimos consignados do INSS</p>
+        </header>
+
+        <main>
+            <!-- Formulário de Consulta -->
+            <section class="form-section">
+                <h2>Dados do Cliente</h2>
+                <form id="formConsulta" class="form-consulta">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nome">Nome Completo *</label>
+                            <input type="text" id="nome" name="nome" required placeholder="Digite o nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF *</label>
+                            <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" maxlength="14">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="idade">Idade *</label>
+                            <input type="number" id="idade" name="idade" required min="18" max="120" placeholder="Idade">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigo_beneficio">Código do Benefício *</label>
+                            <input type="text" id="codigo_beneficio" name="codigo_beneficio" required placeholder="Código do benefício">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="parcelas_pagas">Parcelas Pagas *</label>
+                            <input type="number" id="parcelas_pagas" name="parcelas_pagas" required min="0" placeholder="Quantidade de parcelas">
+                        </div>
+                        <div class="form-group">
+                            <label for="banco_atual">Banco Atual *</label>
+                            <select id="banco_atual" name="banco_atual" required>
+                                <option value="">Selecione o banco</option>
+                                {% for banco in bancos %}
+                                <option value="{{ banco }}">{{ banco }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valor_parcela">Valor da Parcela (R$) *</label>
+                            <input type="number" id="valor_parcela" name="valor_parcela" required step="0.01" min="0.01" placeholder="0,00">
+                        </div>
+                        <div class="form-group">
+                            <label for="saldo_devedor">Saldo Devedor (R$) *</label>
+                            <input type="number" id="saldo_devedor" name="saldo_devedor" required step="0.01" min="0.01" placeholder="0,00">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="valor_total">Valor Total (R$) *</label>
+                            <input type="number" id="valor_total" name="valor_total" required step="0.01" min="0.01" placeholder="0,00">
+                        </div>
+                        <div class="form-group">
+                            <label for="taxa">Taxa Atual (%) *</label>
+                            <input type="number" id="taxa" name="taxa" required step="0.01" min="0" max="100" placeholder="0,00">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-consultar">
+                            🔍 Consultar Portabilidade
+                        </button>
+                        <button type="reset" class="btn-limpar">
+                            🗑️ Limpar Formulário
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Resultados da Consulta -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <h2>Resultados da Consulta</h2>
+                <div class="results-summary">
+                    <div class="summary-card">
+                        <span class="summary-label">Total de Bancos:</span>
+                        <span class="summary-value" id="totalBancos">0</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Status:</span>
+                        <span class="summary-value" id="statusConsulta">-</span>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="results-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Banco</th>
+                                <th>Tipo de Operação</th>
+                                <th>Taxa Aplicável (%)</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Resultados serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="no-results" id="noResults" style="display: none;">
+                    <p>Nenhum banco atende aos critérios de portabilidade para este cliente.</p>
+                    <p>Verifique os dados informados e tente novamente.</p>
+                </div>
+            </section>
+
+            <!-- Mensagens de Erro -->
+            <div class="error-messages" id="errorMessages" style="display: none;">
+                <h3>❌ Erros encontrados:</h3>
+                <ul id="errorList">
+                    <!-- Lista de erros será inserida aqui -->
+                </ul>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Consultando portabilidade...</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 ConsigaCred - Sistema de Consulta de Portabilidade INSS</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
